@@ -116,6 +116,11 @@ in
                 default = _: "${cfg.directory}/${name}";
                 readOnly = true;
               };
+
+              unitName = mkOption {
+                default = let path = "${cfg.directory}/${name}"; in "declared-secret-${safeName path}.service";
+                readOnly = true;
+              };
             };
           });
         in
@@ -141,6 +146,10 @@ in
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
+          };
+
+          unitConfig = {
+            RequiresMountsFor = cfg.directory;
           };
 
           script = supportedTypes.${secret.type} path secret;
