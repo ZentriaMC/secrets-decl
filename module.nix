@@ -47,21 +47,21 @@ let
           ${script args'}
         } | atomicReplace "${group}" "${path}"
       '';
-    in
-    {
-      password = atomicReplace ({ length, trailingNewline, ... }:
-        let
-          # https://owasp.org/www-community/password-special-characters
-          alphabet = "'A-Za-z0-9!\"#$%&'\\''()*+,-./:;<=>?@[\\]^_`{|}~'";
-        in
-        ''
-          (LC_ALL=C; 2>/dev/null tr -dc ${alphabet} </dev/urandom | head -c ${toString length} ${optionalString trailingNewline "; echo"})
-        '');
 
-      uuid = atomicReplace ({ trailingNewline, ... }: ''
-        (echo ${optionalString (!trailingNewline) "-n"} "$(< /proc/sys/kernel/random/uuid)")
-      '');
-    };
+      types' = [
+        ./secret-types/password.nix
+        ./secret-types/uuid.nix
+      ];
+    in
+    lib.listToAttrs (map
+      (f:
+        let
+          namef' = lib.replaceStrings [ ".nix" ] [ "" ];
+          name = namef' (baseNameOf (toString f));
+        in
+        lib.nameValuePair name (atomicReplace (import f { inherit (pkgs) lib; }))
+      )
+      types');
 in
 {
   options = {
