@@ -67,7 +67,7 @@ in
   options = {
     declared-secrets = {
       directory = mkOption {
-        type = types.str;
+        type = types.path;
         default = "/run/declared-secrets";
         description = "Directory where to store the declared keys";
       };
