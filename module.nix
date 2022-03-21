@@ -137,6 +137,7 @@ in
         let
           path = "${cfg.directory}/${name}";
           unitName = "declared-secret-${safeName path}";
+          secretType' = supportedTypes.${secret.type};
         in
         nameValuePair unitName {
           description = "Declared secret - ${path}";
@@ -152,7 +153,7 @@ in
             RequiresMountsFor = cfg.directory;
           };
 
-          script = supportedTypes.${secret.type} path secret;
+          script = secretType' path secret;
         };
     in
     {
