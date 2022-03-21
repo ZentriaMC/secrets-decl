@@ -159,5 +159,15 @@ in
     {
       systemd.services = mkMerge ([ (mapAttrs' createSecretUnit cfg.secrets) ]);
       users.groups.keys.gid = mkDefault 96; # nixos/modules/misc/ids.nix
+    } // lib.optionalAttrs (cfg.directory != "/run/keys") {
+      fileSystems."${cfg.directory}" = {
+        fsType = "ramfs";
+        options = [ "rw" "nosuid" "nodev" "relatime" "mode=750" ];
+      };
+
+      systemd.tmpfiles.rules = [
+        "d '${cfg.directory}' 0750 root ${toString config.users.groups.keys.gid}"
+        "z '${cfg.directory}' 0750 root ${toString config.users.groups.keys.gid}"
+      ];
     };
 }
