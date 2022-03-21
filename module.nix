@@ -39,9 +39,9 @@ let
           exit 0
         fi
       '' + ''
-        mkdir -p ${cfg.directory}
-        chown 0:0 ${cfg.directory}
-        chmod 755 ${cfg.directory}
+        mkdir -p "${cfg.directory}"
+        chown 0:0 "${cfg.directory}"
+        chmod 755 "${cfg.directory}"
 
         {
           ${script args'}
