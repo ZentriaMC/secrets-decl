@@ -158,6 +158,6 @@ in
     in
     {
       systemd.services = mkMerge ([ (mapAttrs' createSecretUnit cfg.secrets) ]);
-      users.groups.keys.gid = mkDefault 3001;
+      users.groups.keys.gid = mkDefault 96; # nixos/modules/misc/ids.nix
     };
 }
